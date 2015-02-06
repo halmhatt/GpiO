@@ -1,27 +1,29 @@
 {
   "name": "gpio",
-  "version": "0.2.6",
+  "version": "1.0.0",
   "author": {
-    "name": "Dominick Pham",
-    "email": "dominick@dph.am",
-    "url": "http://dph.am"
+    "name": "Jacob Carlsson",
+    "email": "jacob.carlsson@gmail.com"
   },
   "scripts": {
     "build": "6to5 --out-dir lib src"
   },
-  "description": "Talk to your Raspberry PI's general purpose inputs and outputs",
+  "description": "Talk to your Raspberry PI's general purpose inputs and outputs with promises",
   "keywords": [
     "gpio",
     "raspberry",
     "pi"
   ],
   "main": "./lib/gpio.js",
-  "repository": "git://github.com/EnotionZ/GpiO.git",
+  "repository": "git://github.com/halmhatt/gpio-promise.git", 
   "devDependencies": {
     "6to5": "^3.3.12",
     "sinon": "*"
   },
   "licenses": [
+    {
+      "type": "MIT"
+    },
     {
       "type": "MIT",
       "url": "https://raw.github.com/EnotionZ/GpiO/master/LICENSE"
