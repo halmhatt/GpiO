@@ -8,7 +8,8 @@
   "scripts": {
     "build": "6to5 --out-dir lib src",
     "test": "mocha --compilers js:6to5/register test/*Spec.js",
-    "pretest": "npm run build"
+    "pretest": "npm run build",
+    "prepublish": "npm run build"
   },
   "description": "Talk to your Raspberry PI's general purpose inputs and outputs with promises",
   "keywords": [
@@ -16,7 +17,7 @@
     "raspberry",
     "pi"
   ],
-  "main": "./lib/gpio.js",
+  "main": "./lib/gpio-promise.js",
   "repository": "git://github.com/halmhatt/gpio-promise.git",
   "devDependencies": {
     "6to5": "^3.3.12",
