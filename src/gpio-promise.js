@@ -1,3 +1,6 @@
+// Shim
+import 'core-js/shim';
+
 import {GPIO} from './gpio';
 import {EventEmitter} from 'events';
 import _ from 'lodash';
@@ -7,21 +10,23 @@ const GPIO_PATH = '/sys/class/gpio/';
 class GpioPin extends GPIO {
 	constructor(headerNum, opts) {
 
-		let {interval} = opts;
+		super(headerNum, opts);
 
-		if(typeof interval !== 'number') {
-			interval = 100;
-		}
+		// let {interval} = opts;
 
-		this.interval = interval;
+		// if(typeof interval !== 'number') {
+		// 	interval = 100;
+		// }
 
-		this.headerNum = headerNum;
-		this.value = 0;
+		// this.interval = interval;
 
-		this.PATH = {};
-		this.PATH.PIN =       `${gpiopath}gpio${headerNum}/`;
-		this.PATH.VALUE =     `${this.PATH.PIN}value`;
-		this.PATH.DIRECTION = `${this.PATH.PIN}direction`;
+		// this.headerNum = headerNum;
+		// this.value = 0;
+
+		// this.PATH = {};
+		// this.PATH.PIN =       `${gpiopath}gpio${headerNum}/`;
+		// this.PATH.VALUE =     `${this.PATH.PIN}value`;
+		// this.PATH.DIRECTION = `${this.PATH.PIN}direction`;
 	}
 
 	// Open in for input/output
@@ -78,19 +83,24 @@ class GpioPin extends GPIO {
 
 	// Listen for event
 	on(event, callback) {
+		let lastValue = this.value;
 
 		if(event === 'rising-edge') {
 			super.on('change', (value) => {
-				if(value === 1) {
+				if(value === 1 && lastValue === 0) {
 					callback.call(this, value);
 				}
+
+				lastValue = value;
 			});
 			return;
 		} else if(event === 'falling-edge') {
 			super.on('change', (value) => {
-				if(value === 0) {
+				if(value === 0 && lastValue === 1) {
 					callback.call(this, value);
 				}
+
+				lastValue = value;
 			});
 			return;
 		}

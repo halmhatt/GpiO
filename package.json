@@ -6,7 +6,9 @@
     "email": "jacob.carlsson@gmail.com"
   },
   "scripts": {
-    "build": "6to5 --out-dir lib src"
+    "build": "6to5 --out-dir lib src",
+    "test": "mocha --compilers js:6to5/register test/*Spec.js",
+    "pretest": "npm run build"
   },
   "description": "Talk to your Raspberry PI's general purpose inputs and outputs with promises",
   "keywords": [
@@ -15,9 +17,11 @@
     "pi"
   ],
   "main": "./lib/gpio.js",
-  "repository": "git://github.com/halmhatt/gpio-promise.git", 
+  "repository": "git://github.com/halmhatt/gpio-promise.git",
   "devDependencies": {
     "6to5": "^3.3.12",
+    "chai": "^1.10.0",
+    "mocha": "^2.1.0",
     "sinon": "*"
   },
   "licenses": [
@@ -28,5 +32,9 @@
       "type": "MIT",
       "url": "https://raw.github.com/EnotionZ/GpiO/master/LICENSE"
     }
-  ]
+  ],
+  "dependencies": {
+    "core-js": "^0.4.10",
+    "lodash": "^3.1.0"
+  }
 }
