@@ -53,7 +53,7 @@ class GpioPin extends GPIO {
 
 	set(value) {
 		return new Promise((resolve) => {
-			this.set(value, resolve);
+			super.set(value, resolve);
 		});
 	}
 

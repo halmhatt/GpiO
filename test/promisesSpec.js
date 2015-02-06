@@ -9,15 +9,26 @@ describe('gpio-promise', function(){
 
 	let writeFile;
 	let readFile;
+	let fileMock = {};
 
 	beforeEach(() => {
 		sinon.stub(fs, 'exists', () => {
 			return true;
 		});
 
-		writeFile = sinon.stub(fs, 'writeFile').yields([null]);
+		writeFile = sinon.stub(fs, 'writeFile', (file, str, fn) => {
+			fileMock[file] = str;
+
+			fn(null);
+		});
+
 		readFile = sinon.stub(fs, 'readFile', (file, encoding, fn) => {
-			fn(null, '1');
+			if(fileMock[file]) {
+				fn(null, fileMock[file]);
+				return;
+			}
+
+			fn(null, '0');
 		});
 	});
 
@@ -106,6 +117,56 @@ describe('gpio-promise', function(){
 				expect(cnt.change).to.equal(7);
 				expect(sum).to.equal(3);
 			});
+	});
+
+	it('should be possible to set values', () => {
+		let gpio7 = new GpioPin(7);
+
+		// Set output
+		return gpio7.out()
+				.then(() => {
+					// Set high
+					return gpio7.high();
+				})
+				.then(() => {
+					// Make input
+					return gpio7.in();
+				})
+				.then(() => {
+					expect(gpio7.value).to.equal(1);
+
+					// Make output
+					return gpio7.out();
+				})
+				.then(() => {
+					// Set low
+					return gpio7.low();
+				})
+				.then(() => {
+					expect(gpio7.value).to.equal(0);
+				});
+	});
+
+	it('should be possible to toggle value', () => {
+		let gpio7 = new GpioPin(7);
+
+		return gpio7.out()
+				.then(() => {
+					return gpio7.set(1);
+				})
+				.then(() => {
+					expect(gpio7.value).to.equal(1);
+
+					return gpio7.toggle();
+				})
+				.then(() => {
+					expect(gpio7.value).to.equal(0);
+
+					return gpio7.toggle();
+				})
+				.then(() => {
+					expect(gpio7.value).to.equal(1);
+				});
 	});
 
 	afterEach(() => {
