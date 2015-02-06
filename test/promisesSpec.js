@@ -5,31 +5,36 @@ import fs from 'fs';
 import GpioPin from '../lib/gpio-promise';
 import sinon from 'sinon';
 
+
+/*
+ * Mocking
+ */
+let fileMock = {};
+function exists(file) {
+	return fileMock[file];
+};
+
+function writeFile(file, str, fn) {
+	fileMock[file] = str;
+	fn(null);
+}
+
+function readFile(file, encoding, fn) {
+	if(fileMock[file]) {
+		fn(null, fileMock[file]);
+		return;
+	}
+
+	fn(null, '0');
+}
+
+/** Describe the lib */
 describe('gpio-promise', function(){
 
-	let writeFile;
-	let readFile;
-	let fileMock = {};
-
 	beforeEach(() => {
-		sinon.stub(fs, 'exists', () => {
-			return true;
-		});
-
-		writeFile = sinon.stub(fs, 'writeFile', (file, str, fn) => {
-			fileMock[file] = str;
-
-			fn(null);
-		});
-
-		readFile = sinon.stub(fs, 'readFile', (file, encoding, fn) => {
-			if(fileMock[file]) {
-				fn(null, fileMock[file]);
-				return;
-			}
-
-			fn(null, '0');
-		});
+		sinon.stub(fs, 'exists', exists);
+		sinon.stub(fs, 'writeFile', writeFile);
+		sinon.stub(fs, 'readFile', readFile);
 	});
 
 	it('should be possible to create object', () => {
